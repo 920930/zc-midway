@@ -7,9 +7,9 @@ export class User extends Model {
 
   @Column
   avatar: string;
-  
+
   @Column
-  openId: string;
+  openid: string;
 
   @Default(0)
   @Column({
@@ -17,7 +17,7 @@ export class User extends Model {
     comment: '管理员1,用户0',
   })
   isVip: boolean;
-  
+
   @Default(0)
   @Column({
     type: DataType.TINYINT('1'),
@@ -26,7 +26,7 @@ export class User extends Model {
   sign: boolean;
 
   @Column({
-    type: DataType.STRING(30)
+    type: DataType.STRING(30),
   })
-  tel: string
+  tel: string;
 }

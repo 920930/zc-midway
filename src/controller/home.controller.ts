@@ -1,9 +1,16 @@
-import { Controller, Inject, Get, Post, Body, Query } from '@midwayjs/decorator';
+import {
+  Controller,
+  Inject,
+  Get,
+  Post,
+  Body,
+  Query,
+} from '@midwayjs/decorator';
 import { Context } from '@midwayjs/koa';
 import { createHash } from 'crypto';
 import { getUserInfo } from '../utils/wechatUser';
 import { UserService } from '../service/user.service';
-import { IndexError } from '../error/index.error';
+// import { IndexError } from '../error/index.error';
 
 @Controller('/')
 export class HomeController {
@@ -19,9 +26,7 @@ export class HomeController {
     const token = '2270b0fb-39db-4a14-9f83-34aaf9f8c90b';
     const str = [token, timestamp, nonce].sort().join('');
     const _signature = createHash('sha1').update(str, 'utf-8').digest('hex');
-    console.log(this.ctx.query)
-    console.log(_signature)
-    if(_signature === signature) {
+    if (_signature === signature) {
       return echostr as string;
     }
     return 'Hello Midwayjs!';
@@ -30,30 +35,25 @@ export class HomeController {
   @Post('/init')
   async init(@Body() host: any) {
     let url = host.url;
-    host.code && (url += `?code=${host.code}`)
-    host.state && (url += `&state=${host.state}`)
+    host.code && (url += `?code=${host.code}`);
+    host.state && (url += `&state=${host.state}`);
     return await this.userService.init(url);
   }
 
-  @Get('/login')
-  async login (@Query('code') code: string) {
-    if(!code) return '213'
-    const user = await getUserInfo(code)
-    return {
-      user
-    }
-  }
-
   @Get('/code')
-  async code (@Query('code') code: string) {
-    const wechatUser = await getUserInfo(code)
-    if(Reflect.has(wechatUser, 'errcode')) {
-      throw new IndexError(wechatUser['errmsg'])
+  async create(@Query('code') code: string) {
+    const { wechatUser } = await getUserInfo(code);
+    if (Reflect.has(wechatUser, 'errcode')) {
+      return wechatUser;
     }
-    const { user, token} = await this.userService.create({name: wechatUser.nickname, avatar: wechatUser.headimgurl, openid: wechatUser.openid})
+    const { user, token } = await this.userService.create({
+      name: wechatUser.nickname,
+      avatar: wechatUser.headimgurl,
+      openid: wechatUser.openid,
+    });
     return {
       token,
-      user: {id: user.id, name: user.name, avatar: user.avatar, openid: user.openId}
-    }
+      user,
+    };
   }
 }
