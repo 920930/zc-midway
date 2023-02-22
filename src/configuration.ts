@@ -8,9 +8,9 @@ import * as dotenv from 'dotenv';
 import * as jwt from '@midwayjs/jwt';
 import * as cache from '@midwayjs/cache';
 import { join } from 'path';
-// import { DefaultErrorFilter } from './filter/default.filter';
+import { DefaultErrorFilter } from './filter/default.filter';
 // import { NotFoundFilter } from './filter/notfound.filter';
-// import { ReportMiddleware } from './middleware/report.middleware';
+import { ReportMiddleware } from './middleware/report.middleware';
 
 dotenv.config()
 
@@ -35,8 +35,8 @@ export class ContainerLifeCycle {
 
   async onReady() {
     // add middleware
-    // this.app.useMiddleware([ReportMiddleware]);
+    this.app.useMiddleware([ReportMiddleware]);
     // add filter
-    // this.app.useFilter([NotFoundFilter, DefaultErrorFilter]);
+    this.app.useFilter([DefaultErrorFilter]);
   }
 }

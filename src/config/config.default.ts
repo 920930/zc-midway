@@ -8,8 +8,9 @@ export default {
     port: 7001,
   },
   wechat: {
-    appId: 'wx7e998d6d465a5e90',
-    appSecret: '4e8bf5923e330ceee034d8a67012faff',
+    // 测试平台
+    appId: 'wx7e9980005e90',
+    appSecret: '4e8bf5923e3300008a67012faff',
   },
   sequelize: {
     dataSource: {
@@ -32,7 +33,7 @@ export default {
   },
   jwt: {
     secret: '7f24174e-80cb-4a88-8ccd-b22a0117fc63', // fs.readFileSync('xxxxx.key')
-    expiresIn: '2d', // https://github.com/vercel/ms
+    expiresIn: '10s', // https://github.com/vercel/ms
   },
   cache: {
     store: 'memory',
@@ -41,4 +42,4 @@ export default {
       ttl: 7200,   // ttl过期时间，单位为秒
     },
   }
-} as MidwayConfig;
+} as MidwayConfig & { wechat : { appId: string; appSecret: string }};

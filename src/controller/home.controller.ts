@@ -4,13 +4,10 @@ import {
   Get,
   Post,
   Body,
-  Query,
 } from '@midwayjs/decorator';
 import { Context } from '@midwayjs/koa';
 import { createHash } from 'crypto';
-import { getUserInfo } from '../utils/wechatUser';
-import { UserService } from '../service/user.service';
-// import { IndexError } from '../error/index.error';
+import { HomeService } from '../service/home.service';
 
 @Controller('/')
 export class HomeController {
@@ -18,12 +15,12 @@ export class HomeController {
   ctx: Context;
 
   @Inject()
-  userService: UserService;
+  homeService: HomeService;
 
   @Get('/')
-  async home(): Promise<string> {
+  async home() {
     const { nonce, timestamp, echostr, signature } = this.ctx.query;
-    const token = '2270b0fb-39db-4a14-9f83-34aaf9f8c90b';
+    const token = '7f24174e80cb4a888ccdb22a0117fc63';
     const str = [token, timestamp, nonce].sort().join('');
     const _signature = createHash('sha1').update(str, 'utf-8').digest('hex');
     if (_signature === signature) {
@@ -37,23 +34,6 @@ export class HomeController {
     let url = host.url;
     host.code && (url += `?code=${host.code}`);
     host.state && (url += `&state=${host.state}`);
-    return await this.userService.init(url);
-  }
-
-  @Get('/code')
-  async create(@Query('code') code: string) {
-    const { wechatUser } = await getUserInfo(code);
-    if (Reflect.has(wechatUser, 'errcode')) {
-      return wechatUser;
-    }
-    const { user, token } = await this.userService.create({
-      name: wechatUser.nickname,
-      avatar: wechatUser.headimgurl,
-      openid: wechatUser.openid,
-    });
-    return {
-      token,
-      user,
-    };
+    return await this.homeService.init(url);
   }
 }

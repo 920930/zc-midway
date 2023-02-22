@@ -16,6 +16,7 @@
     "@midwayjs/sequelize": "3",
     "@midwayjs/validate": "^3.0.0",
     "cache-manager": "^5.1.6",
+    "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "mysql2": "^3.1.2",
     "sequelize": "^6.28.0",
